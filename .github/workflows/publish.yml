@@ -1,14 +1,12 @@
-# This is a basic workflow to help you get started with Actions
+# This is a github action which builds Fulcrum docker image and uploads it on Docker Hub
+# This action is triggered when a new tagged release is created. Recommended tag names are in semver format, for example: v1.0.0
 
 name: Publish
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on release creation
   release:
     types: [created]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -32,7 +30,7 @@ jobs:
       - name: Login to docker hub
         uses: docker/login-action@v1.6.0
         with:
-          username: cculianu
+          username: mainnetpat
           password: ${{secrets.DOCKERHUB_PASSWORD}}
 
       # If you want support for more platforms you can use our setup-qemu action:
@@ -44,8 +42,8 @@ jobs:
 
       # publish version tagged image
       - name: Build docker image
-        run: docker buildx build --build-arg MAKEFLAGS="-j ${WORKER_COUNT}" -t cculianu/fulcrum:${{ env.TAG_NAME }} -f contrib/docker/Dockerfile --platform linux/arm64/v8,linux/amd64 --push .
+        run: docker buildx build --build-arg MAKEFLAGS="-j ${WORKER_COUNT}" -t mainnetpat/fulcrum:${{ env.TAG_NAME }} -f contrib/docker/Dockerfile --platform linux/arm64/v8,linux/amd64 --push .
       # publish 'latest' tagged image
       - name: Build docker image
-        run: docker buildx build --build-arg MAKEFLAGS="-j ${WORKER_COUNT}" -t cculianu/fulcrum:latest -f contrib/docker/Dockerfile --platform linux/arm64/v8,linux/amd64 --push .
+        run: docker buildx build --build-arg MAKEFLAGS="-j ${WORKER_COUNT}" -t mainnetpat/fulcrum:latest -f contrib/docker/Dockerfile --platform linux/arm64/v8,linux/amd64 --push .
 
